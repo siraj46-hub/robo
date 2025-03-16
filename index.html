@@ -3,39 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robotic Arm Control</title>
-    <script>
-        function sendJoystickData(servo, value) {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://192.168.1.3/move?servo=" + servo + "&angle=" + value, true);
-            xhr.send();
+    <title>Robotic Arm Controller</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
         }
+        h2 {
+            color: #333;
+        }
+        .slider-container {
+            width: 300px;
+            margin: 15px auto;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+        .label {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .button {
+            background-color: #008CBA;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function sendJoystickData() {
+            var base = document.getElementById("base").value;
+            var shoulder = document.getElementById("shoulder").value;
+            var elbow = document.getElementById("elbow").value;
+            var wrist = document.getElementById("wrist").value;
+            var wristRotate = document.getElementById("wristRotate").value;
+            var grip = document.getElementById("grip").value;
 
-        function handleJoystick(event, servo) {
-            let value = Math.floor((event.target.value / 100) * 180); // Convert 0-100 range to 0-180 degrees
-            sendJoystickData(servo, value);
+            var url = "http://192.168.1.3/control?base=" + base + 
+                      "&shoulder=" + shoulder + 
+                      "&elbow=" + elbow + 
+                      "&wrist=" + wrist + 
+                      "&wristRotate=" + wristRotate + 
+                      "&grip=" + grip;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", url, true);
+            xhr.send();
         }
     </script>
 </head>
 <body>
-    <h2>Robotic Arm Control</h2>
 
-    <label>Base Rotation</label>
-    <input type="range" min="0" max="100" oninput="handleJoystick(event, 'x')"><br>
+    <h2>Robotic Arm Controller</h2>
 
-    <label>Shoulder</label>
-    <input type="range" min="0" max="100" oninput="handleJoystick(event, 'y')"><br>
+    <div class="slider-container">
+        <span class="label">Base Rotation</span>
+        <input id="base" type="range" min="0" max="180" value="90" oninput="sendJoystickData()">
+    </div>
 
-    <label>Elbow</label>
-    <input type="range" min="0" max="100" oninput="handleJoystick(event, 'z')"><br>
+    <div class="slider-container">
+        <span class="label">Shoulder</span>
+        <input id="shoulder" type="range" min="0" max="180" value="90" oninput="sendJoystickData()">
+    </div>
 
-    <label>Wrist</label>
-    <input type="range" min="0" max="100" oninput="handleJoystick(event, 'wrist')"><br>
+    <div class="slider-container">
+        <span class="label">Elbow</span>
+        <input id="elbow" type="range" min="0" max="180" value="90" oninput="sendJoystickData()">
+    </div>
 
-    <label>Wrist Rotation</label>
-    <input type="range" min="0" max="100" oninput="handleJoystick(event, 'wristRotate')"><br>
+    <div class="slider-container">
+        <span class="label">Wrist</span>
+        <input id="wrist" type="range" min="0" max="180" value="90" oninput="sendJoystickData()">
+    </div>
 
-    <label>Gripper</label>
-    <input type="range" min="0" max="100" oninput="handleJoystick(event, 'grip')"><br>
+    <div class="slider-container">
+        <span class="label">Wrist Rotation</span>
+        <input id="wristRotate" type="range" min="0" max="180" value="90" oninput="sendJoystickData()">
+    </div>
+
+    <div class="slider-container">
+        <span class="label">Gripper</span>
+        <input id="grip" type="range" min="0" max="180" value="90" oninput="sendJoystickData()">
+    </div>
+
 </body>
 </html>
